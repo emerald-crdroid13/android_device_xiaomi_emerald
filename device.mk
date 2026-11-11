@@ -345,6 +345,6 @@ PRODUCT_SOONG_NAMESPACES += \
 # Inherit the proprietary files
 $(call inherit-product, vendor/xiaomi/emerald/emerald-vendor.mk)
 
-# GApps (MindTheGapps cinnamonbun, vendor/gapps in the local manifest; user, 2026-10-14 and
-# 2026-10-15). Required: a build without them must fail instead of quietly shipping no Play services.
-$(call inherit-product, vendor/gapps/arm64/arm64-vendor.mk)
+# GApps (MindTheGapps): the crDroid line ships without them (user, 2026-11-11), so the file is
+# picked up only when vendor/gapps is in the local manifest. The LineageOS 2.x line required it.
+$(call inherit-product-if-exists, vendor/gapps/arm64/arm64-vendor.mk)
