@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # Extracts the system-side MediaTek blobs (proprietary-files.txt) and the firmware images
-# (proprietary-firmware.txt) from a stock OS3.0.305.0.WNFMIXM dump. The vendor-side partitions
+# (proprietary-firmware.txt) from a stock OS3.0.307.0.WNFMIXM dump. The vendor-side partitions
 # come as whole stock images, see extract-images.sh.
 #
 

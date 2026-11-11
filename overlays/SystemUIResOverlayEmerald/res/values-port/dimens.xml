@@ -4,6 +4,6 @@
     SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
-    <!-- As the stock OS3.0.305.0 DevicesOverlay.apk (portrait only there too) -->
+    <!-- As the stock OS3.0.307.0 DevicesOverlay.apk (portrait only there too) -->
     <dimen name="status_bar_padding_top">14px</dimen>
 </resources>

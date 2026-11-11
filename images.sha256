@@ -1,8 +1,8 @@
-# sha256 of the stock OS3.0.305.0.WNFMIXM super partitions (slot a, from lpunpack of images/super.img)
-# Each one also verifies against its own AVB hashtree footer. vendor.img has a FILL chunk with a
-# non-zero value (block 767, 01000100) in super.img; a tool that writes it as zeros gives a
-# vendor.img that fails this check (a5eb7d44...).
-6d571043a9a64626208b2f6117363b0d87d453a12b2d6c3ca4e0179c52d1c1f9  odm_dlkm.img
-b7e22b06faab06db5b0f56a22f6f6a1e21a1c4a2171e22faa66f44f4e5e592a3  system_dlkm.img
-e2189c3078701b574545094b6a3676c2c6544d9f5260329147cc6af137ba1dd6  vendor.img
-370fd635950444aa36cc0876ea4e26eaf0733e333c7f528d7c22a8bbdbd9c9a2  vendor_dlkm.img
+# sha256 of the stock OS3.0.307.0.WNFMIXM super partitions (slot a, from lpunpack of images/super.img)
+# Each one also verifies against its own AVB hashtree footer. A stock super.img may store some
+# blocks as sparse FILL chunks with a non-zero value; a tool that writes them as zeros gives an
+# image that fails this check.
+3948c44d8419400740c5fa9df9aa48a70959ea607f91ba3296518c46647e1a97  vendor.img
+e866084b73860acd62872f57e4a2954c414546570016b9b3d96f67a554dfff96  vendor_dlkm.img
+6a5ac47c7aed82de8035e3da5b274c5eaa63af40c666d42587744ad7990a7b69  odm_dlkm.img
+b058d17b090b57c0b51d35183d664abe90589308661205c0b75d416043b211a8  system_dlkm.img

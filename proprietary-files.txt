@@ -1,4 +1,4 @@
-# System-side MediaTek blobs from stock OS3.0.305.0.WNFMIXM system_ext (vendor-side files are not
+# System-side MediaTek blobs from stock OS3.0.307.0.WNFMIXM system_ext (vendor-side files are not
 # listed: vendor, vendor_dlkm, odm_dlkm and system_dlkm ship as the stock images).
 # Selection as LineageOS motorola/mt6768-common and xelex/Q25, without the video call service (see IMS).
 # Not taken: the stock audio parameter parser (system_ext/bin/hw/android.hardware.audio.parameter_parser.service).

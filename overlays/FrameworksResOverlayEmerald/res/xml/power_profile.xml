@@ -9,7 +9,7 @@
     measured yet (calibration round 2): screen.on, cpu.idle, audio, video, camera.flashlight, gps.on, radio.*,
     wifi.on, wifi.scan, bluetooth.active and bluetooth.on, from the stock profile of tanzanite that r30
     inherited (rebuild-1 cdad944); screen.full was measured on top of that screen.on. The CPU frequency steps
-    and battery.capacity are the ones of the stock OS3.0.305.0 profile (HyperOS product overlay
+    and battery.capacity are the ones of the stock OS3.0.307.0 profile (HyperOS product overlay
     AospFrameworkResOverlay.apk), which clean-2 used before: its values were several times the measured ones
     (screen.full 1391 mA against 240), its modem controller was all zero and it had no Bluetooth controller, so
     Settings > Battery usage showed no mobile network or Bluetooth rows.

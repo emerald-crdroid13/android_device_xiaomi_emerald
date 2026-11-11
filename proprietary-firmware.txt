@@ -1,4 +1,4 @@
-# Firmware from stock OS3.0.305.0.WNFMIXM (the set the stock flash_all.sh flashes to both slots,
+# Firmware from stock OS3.0.307.0.WNFMIXM (the set the stock flash_all.sh flashes to both slots,
 # without vbmeta*, dtbo, boot, vendor_boot, logo and super). preloader_raw.img = preloader_emerald.bin.
 dpm.img;AB
 gz.img;AB

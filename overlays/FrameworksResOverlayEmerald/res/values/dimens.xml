@@ -4,7 +4,7 @@
     SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
-    <!-- Rounded corners and status bar height, as the stock OS3.0.305.0 DevicesAndroidOverlay.apk -->
+    <!-- Rounded corners and status bar height, as the stock OS3.0.307.0 DevicesAndroidOverlay.apk -->
     <dimen name="rounded_corner_radius">70px</dimen>
     <dimen name="rounded_corner_radius_top">70px</dimen>
     <dimen name="rounded_corner_radius_bottom">70px</dimen>

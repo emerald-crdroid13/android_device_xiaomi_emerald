@@ -226,7 +226,7 @@ PRODUCT_SYSTEM_PROPERTIES += \
 PRODUCT_PACKAGES += \
     SettingsResOverlayEmerald
 
-# Window and shade blur, as stock OS3.0.305.0 (its system_ext.prop sets the same prop on this vendor and
+# Window and shade blur, as stock OS3.0.307.0 (its system_ext.prop sets the same prop on this vendor and
 # Mali r54p1 driver). On clean-2.7 this prop was the only missing condition (SystemUI BlurUtils:
 # isHighEndGfx true, disable_window_blurs 0). The off switch is AOSP's: Settings > Accessibility >
 # Color and motion "Reduce blur effects" / Developer options "Allow window-level blurs".
@@ -281,7 +281,7 @@ PRODUCT_PACKAGE_OVERLAYS += \
 # Bluetooth profiles. The Bluetooth module enables a profile only when its sysprop is true
 # (A2dpService.isEnabled() = isProfileA2dpSourceEnabled().orElse(false)); stock sets these in the
 # HyperOS system + product build.prop, which clean-2 doesn't ship, so only GATT (BLE: the watch),
-# HearingAid and SAP ran and headphones had no A2DP / HFP (clean-1.2.x and 2.0). Stock OS3.0.305.0
+# HearingAid and SAP ran and headphones had no A2DP / HFP (clean-1.2.x and 2.0). Stock OS3.0.307.0
 # set; LE Audio profiles off as on stock.
 PRODUCT_PRODUCT_PROPERTIES += \
     bluetooth.profile.a2dp.source.enabled=true \

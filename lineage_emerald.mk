@@ -27,7 +27,7 @@ PRODUCT_SYSTEM_NAME := emerald_global
 PRODUCT_SYSTEM_DEVICE := emerald
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
-    BuildDesc="missi-user 16 BP2A.250605.031.A3 OS3.0.305.0.WNFMIXM release-keys" \
-    BuildFingerprint=Redmi/miodm_emerald/emerald:16/BP2A.250605.031.A3/OS3.0.305.0.WNFMIXM:user/release-keys \
+    BuildDesc="missi-user 16 BP2A.250605.031.A3 OS3.0.307.0.WNFMIXM release-keys" \
+    BuildFingerprint=Redmi/miodm_emerald/emerald:16/BP2A.250605.031.A3/OS3.0.307.0.WNFMIXM:user/release-keys \
     DeviceName=$(PRODUCT_SYSTEM_DEVICE) \
     DeviceProduct=$(PRODUCT_SYSTEM_NAME)

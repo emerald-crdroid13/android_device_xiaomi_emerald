@@ -1,7 +1,7 @@
 ;; SPDX-FileCopyrightText: The LineageOS Project
 ;; SPDX-License-Identifier: Apache-2.0
 ;;
-;; emerald runs the stock OS3.0.305.0 vendor, whose policy is version 202504 and refers to the
+;; emerald runs the stock OS3.0.307.0 vendor, whose policy is version 202504 and refers to the
 ;; system_ext public types (sepolicy_vndr, lineage sepolicy, ...) through <type>_202504 attributes,
 ;; e.g. "allow mtk_hal_audio sysfs_headset_202504". On LineageOS 24.0 (platform 202604) nothing ships
 ;; a system_ext compat/202504 map, so system_ext/etc/selinux/mapping/202504.cil was empty and all of
