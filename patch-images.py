@@ -96,7 +96,7 @@ PATCHES = {
          "# flag at boot, so DAP never processes and the profile switch is inaudible (device/xiaomi/emerald\n"
          "# patch-images.py, B11). The property defaults to 1; 0 turns the latch off.\n"
          "ro.vendor.dolby.dap_bypassed_on_tiny_volume=0\n",
-         "c3688853aa3d91f71b9cecafbb04bbee49a7df4cbc49ad41648010d750ca5b81"),
+         "55c6744a4c751c5ae6869421644ee3cbf0fa2c457f768c71574b072393f618f1"),
         # The health HAL reads the state of health of the fuel gauge from bms/soh (the path is
         # set in build.prop above), so it may search the bms directory and read that one file,
         # labeled on its own. bms is type Battery and must not count as a second battery: its
