@@ -51,7 +51,8 @@ SB_OFFSET = 1024
 
 # image -> (output, [("bytes", path in the image, file offset, stock bytes, new bytes),
 #                    ("file", path in the image, new content (from ANDROID_ROOT), its sha256) or
-#                    ("append", path in the image, text, sha256 of the stock content + text) or
+#                    ("append", path in the image, text, sha256 of the stock content + text
+#                     [, prefixes of stock lines to comment out with "# " before appending]) or
 #                    ("add", path in the image, content (from ANDROID_ROOT), its sha256, mode,
 #                     uid, gid, SELinux label)])
 PATCHES = {
@@ -201,9 +202,14 @@ PATCHES = {
          "/(vendor|system/vendor)/bin/hw/vendor\\.lineage\\.livedisplay-service\\.emerald "
          "u:object_r:hal_lineage_livedisplay_emerald_exec:s0\n",
          "15bbf1a2edb6202d51e89ada1affd15197dbe85b291545f3044751f4ebc4978f"),
+        # LineageOS defines vendor.camera.aux.packagelist (camera2_extensions_prop) in the system
+        # policy (device/lineage/sepolicy/common/private/property_contexts), the stock Android 16
+        # vendor defines the same prefix for vendor_persist_camera_prop; init aborts on a duplicate
+        # prefix match, so the vendor line is commented out and the system mapping is used.
         ("append", "/etc/selinux/vendor_property_contexts",
          "persist.vendor.livedisplay.mode u:object_r:vendor_livedisplay_prop:s0 exact int\n",
-         "47259812761cb1d0cd6c0a49e00b19e16cd85f9375f60452a337e0ba44795761"),
+         "d4a97afc7c6f819d3abf191cf7292f17a34b5d68c9265ecdc425168db1627df4",
+         ["vendor.camera.aux.packagelist "]),
         # LineageOS charging control (Settings > Battery > Charging control): the
         # vendor.lineage.health service of hardware/lineage/interfaces, built for
         # battery/input_suspend (toggle mode only, BoardConfig.mk); see prebuilts/lineage-health.
@@ -714,10 +720,20 @@ def main():
                 ranges += patch_bytes(tmp, path, offset, old, new)
                 expected[path][offset:offset + len(new)] = new
             elif patch[0] == "append":
-                _, path, text, digest = patch
+                _, path, text, digest, *rest = patch
+                comment = rest[0] if rest else ()
                 if path in expected:
                     die(f"{path}: append after another patch of the same file")
-                content = cat(stock, path) + text.encode()
+                content = cat(stock, path)
+                if comment:
+                    lines = content.split(b"\n")
+                    for prefix in comment:
+                        hits = [i for i, l in enumerate(lines) if l.startswith(prefix.encode())]
+                        if len(hits) != 1:
+                            die(f"{path}: {prefix!r} appears {len(hits)} times")
+                        lines[hits[0]] = b"# " + lines[hits[0]]
+                    content = b"\n".join(lines)
+                content += text.encode()
                 if hashlib.sha256(content).hexdigest() != digest:
                     die(f"{path}: sha256 of the stock content + text does not match")
                 ranges += replace_file(tmp, path, content)
