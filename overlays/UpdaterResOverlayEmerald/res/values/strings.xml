@@ -4,11 +4,18 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
-    <!-- The Updater links every changelog and download entry to download.lineageos.org, which has no
-         page for our unofficial emerald builds (404). Point them at our release page instead; the
-         "Последние изменения" button then opens the release note of the installed build. See device.mk. -->
-    <string name="menu_changelog_url" translatable="false">https://github.com/RamDll/emerald-ota/releases/latest</string>
-    <string name="menu_downloads_url" translatable="false">https://github.com/RamDll/emerald-ota/releases/latest</string>
-    <!-- LineageOS bugreport wiki instead of our tracker. -->
+    <!-- Where the Updater looks for its JSON. crDroid's Updater reads only this resource (the
+         lineage.updater.uri system property of the LineageOS app is gone), and the stock value points
+         at crdroidandroid/android_vendor_crDroidOTA/<version>/emerald.json, which does not exist for
+         this device (404: the Updater always says "no updates"). Point it at our own repository, where
+         scripts/ota-server publishes one JSON with all the builds of this line. The Updater replaces
+         only {device} in the URL, so the file name is fixed: emerald.json. See device.mk. -->
+    <string name="updater_server_url" translatable="false">https://raw.githubusercontent.com/RamDll/emerald-crdroid-ota/main/emerald.json</string>
+    <!-- The Updater links every changelog and download entry to crdroid.net / SourceForge, which have
+         no page for these builds. Point them at our release page instead: the "Последние изменения"
+         button then opens the release note of the installed build. -->
+    <string name="menu_changelog_url" translatable="false">https://github.com/RamDll/emerald-crdroid-ota/releases/latest</string>
+    <string name="menu_downloads_url" translatable="false">https://github.com/RamDll/emerald-crdroid-ota/releases/latest</string>
+    <!-- crDroid's bug-report wiki instead of our tracker. -->
     <string name="report_issue_url" translatable="false">https://4pda.to/forum/index.php?showtopic=117304</string>
 </resources>
