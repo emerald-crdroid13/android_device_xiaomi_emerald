@@ -6,13 +6,17 @@
 
 package co.aospa.dolby.xiaomi
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.media.AudioDeviceCallback
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import android.media.AudioManager.AudioPlaybackCallback
 import android.media.AudioPlaybackConfiguration
 import android.os.Handler
+import android.os.UserManager
 import android.util.Log
 import androidx.preference.PreferenceManager
 import co.aospa.dolby.xiaomi.DolbyConstants.Companion.dlog
@@ -116,6 +120,27 @@ internal class DolbyController private constructor(
 
     fun onBootCompleted () {
         dlog(TAG, "onBootCompleted()")
+
+        // The presets to migrate live in credential-encrypted storage, which cannot even be opened
+        // before the user is unlocked: getSharedPreferences() on the CE context throws
+        // IllegalStateException. This receiver is direct-boot aware, so on emerald BOOT_COMPLETED
+        // arrives first and the service crashed on every boot (system_app_crash). Wait for
+        // USER_UNLOCKED instead; the process is persistent, so the receiver stays registered.
+        val userManager = context.getSystemService(UserManager::class.java)
+        if (userManager != null && !userManager.isUserUnlocked) {
+            dlog(TAG, "user is locked, migrating presets after unlock")
+            // Not this context: the one handed to our BroadcastReceiver is a
+            // ReceiverRestrictedContext, whose registerReceiver() throws.
+            val appContext = context.applicationContext
+            appContext.registerReceiver(object : BroadcastReceiver() {
+                override fun onReceive(context: Context, intent: Intent) {
+                    appContext.unregisterReceiver(this)
+                    dlog(TAG, "user unlocked, migrating presets")
+                    maybeMigratePresets()
+                }
+            }, IntentFilter(Intent.ACTION_USER_UNLOCKED))
+            return
+        }
 
         // Migrate presets from credential protected storage if needed
         maybeMigratePresets()

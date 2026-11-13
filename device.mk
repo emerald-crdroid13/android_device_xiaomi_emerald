@@ -320,10 +320,11 @@ PRODUCT_PRODUCT_PROPERTIES += \
 # Updates over the air: the Updater (packages/apps/Updater) asks this URL instead of
 # download.lineageos.org. {incr} = ro.build.version.incremental, so each build gets its own JSON
 # (the incremental OTA from that build, else the full OTA), published with the release files on
-# GitHub RamDll/emerald-ota (~/emerald-buildnotes/scripts/ota-server). raw.githubusercontent.com
-# because the Updater fetches the JSON without following redirects.
+# GitHub RamDll/emerald-crdroid-ota (scripts/ota-server of emerald-crdroid). A separate repository
+# from the LineageOS line: pointing at RamDll/emerald-ota made the Updater offer Lineage builds.
+# raw.githubusercontent.com because the Updater fetches the JSON without following redirects.
 PRODUCT_PRODUCT_PROPERTIES += \
-    lineage.updater.uri=https://raw.githubusercontent.com/RamDll/emerald-ota/main/emerald/{incr}.json
+    lineage.updater.uri=https://raw.githubusercontent.com/RamDll/emerald-crdroid-ota/main/emerald/{incr}.json
 
 # No "Serial console" notification on userdebug: stop the console shell init.rc starts on debuggable
 # builds (emerald boots with console=ttynull, the shell is attached to nothing).
