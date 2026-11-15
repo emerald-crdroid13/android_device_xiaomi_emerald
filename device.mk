@@ -317,7 +317,7 @@ PRODUCT_PRODUCT_PROPERTIES += \
     log.tag.hwcomposer=W \
     log.tag.libsensor-displayalgo=W
 
-# Two more stock components that flood the buffers with lines nobody can act on. Measured on C1.2
+# Three more stock components that flood the buffers with lines nobody can act on. Measured on C1.2
 # (2026-11-15) through setprop, counting only lines inside the window:
 # - libsensor-frameBufferManager: printed by vendor.xiaomi.sensor.citsensorservice.aidl and reports a
 #   *successful* call (ret = 0) at error level, ~9 lines a second (112 in 12 s). With =F: 3 in 12 s.
@@ -325,10 +325,18 @@ PRODUCT_PRODUCT_PROPERTIES += \
 #   the node does not exist in this kernel/vendor pair. Thermal itself is healthy without it
 #   (ThermalService status 0, temperatures normal, mtkpower thermalbreak working), so the line is
 #   noise; with =F it stops (2 in 12 s -> 1, the leftover one predates the property).
+# - MiBrightness: vendor.xiaomi.hardware.displayfeature_aidl-service writes the raw DBV (panel
+#   brightness) to /sys/class/mi_display/disp-DSI-0/backlight on every screen on; that attribute is
+#   not there (106 lines in 18 h, never a single success). Nothing visible depends on it: the
+#   fingerprint's local HBM goes through /dev/mi_display/disp_feature (odm-fp-daemon setLocalHBM
+#   0/1/2, GF_HAL "HBM and Green spot ready"), and brightness/auto-brightness go through
+#   DisplayPowerController and SurfaceFlinger. Kernel and vendor are stock, so stock shows the same
+#   line; no avc denial is involved. Dropped as noise rather than chased.
 # For debugging: setprop log.tag.<tag> "".
 PRODUCT_PRODUCT_PROPERTIES += \
     log.tag.frs=F \
-    log.tag.libsensor-frameBufferManager=F
+    log.tag.libsensor-frameBufferManager=F \
+    log.tag.MiBrightness=F
 
 # Updates over the air: crDroid's Updater reads the JSON URL from the updater_server_url string
 # resource only (the lineage.updater.uri property of the LineageOS app is not read any more), so the
