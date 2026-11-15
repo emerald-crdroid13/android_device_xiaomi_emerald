@@ -317,6 +317,19 @@ PRODUCT_PRODUCT_PROPERTIES += \
     log.tag.hwcomposer=W \
     log.tag.libsensor-displayalgo=W
 
+# Two more stock components that flood the buffers with lines nobody can act on. Measured on C1.2
+# (2026-11-15) through setprop, counting only lines inside the window:
+# - libsensor-frameBufferManager: printed by vendor.xiaomi.sensor.citsensorservice.aidl and reports a
+#   *successful* call (ret = 0) at error level, ~9 lines a second (112 in 12 s). With =F: 3 in 12 s.
+# - frs: /vendor/bin/frs (stock, runs as root) cannot open /sys/kernel/thermal/frs_nl_id every 5 s -
+#   the node does not exist in this kernel/vendor pair. Thermal itself is healthy without it
+#   (ThermalService status 0, temperatures normal, mtkpower thermalbreak working), so the line is
+#   noise; with =F it stops (2 in 12 s -> 1, the leftover one predates the property).
+# For debugging: setprop log.tag.<tag> "".
+PRODUCT_PRODUCT_PROPERTIES += \
+    log.tag.frs=F \
+    log.tag.libsensor-frameBufferManager=F
+
 # Updates over the air: crDroid's Updater reads the JSON URL from the updater_server_url string
 # resource only (the lineage.updater.uri property of the LineageOS app is not read any more), so the
 # URL is set by overlays/UpdaterResOverlayEmerald, not here. The stock value points at
