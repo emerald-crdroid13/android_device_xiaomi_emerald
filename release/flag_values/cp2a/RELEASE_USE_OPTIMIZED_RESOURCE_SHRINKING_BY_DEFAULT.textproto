@@ -1,0 +1,8 @@
+# Дефект 22 (C1.4): R8 на шаге --optimized-resource-shrinking вырезал из Launcher3QuickStep
+# drawable/widgets_24px и widget_internal_focus_bg, на которые ссылается код, — падало меню
+# долгого нажатия на иконках (Resources$NotFoundException). Оставляем обычный aapt2-шринк:
+# ресурсы, на которые есть ссылки из кода, он сохраняет.
+name: "RELEASE_USE_OPTIMIZED_RESOURCE_SHRINKING_BY_DEFAULT"
+value: {
+  bool_value: false
+}

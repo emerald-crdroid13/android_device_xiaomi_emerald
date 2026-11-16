@@ -1,0 +1,7 @@
+# Значения release-флагов этой линии (emerald). Порядок каталогов в release_config.mk:
+# build/release → device/*/*/release, поэтому здешние значения перекрывают AOSP-овские
+# для того же имени конфига (cp2a).
+default_containers: "product"
+default_containers: "system"
+default_containers: "system_ext"
+default_containers: "vendor"
