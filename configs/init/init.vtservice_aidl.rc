@@ -1,0 +1,10 @@
+# Stock OS3.0.307.0 /vendor/etc/init/init.vtservice_aidl.rc, with "service vtservice_aidl" commented out:
+# the service is never needed on the crDroid line and stays off, so the block cannot be
+# started by anything. Everything else is the stock file, byte for byte.
+# VTService_hidl .rc configure
+
+# service vtservice_aidl /vendor/bin/hw/vtservice_aidl
+#     class hal
+#     user system
+#     group system camera graphics inet net_admin net_raw media sdcard_rw radio sdcard_r media_rw
+#     ioprio rt 4

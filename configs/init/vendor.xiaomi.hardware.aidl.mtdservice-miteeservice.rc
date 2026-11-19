@@ -1,0 +1,14 @@
+# Stock OS3.0.307.0 /vendor/etc/init/vendor.xiaomi.hardware.aidl.mtdservice-miteeservice.rc: the 'start vendor.mitee.mtdservice' line is commented out, the
+# service stays off - nothing on the crDroid line needs it (device/xiaomi/emerald
+# patch-images.py). Everything else is the stock file, byte for byte.
+service vendor.mitee.mtdservice /vendor/bin/mtd_mitee
+    class hal
+    user system
+    group system keystore drmrpc
+    disabled
+
+on property:sys.boot_completed=1
+#     start vendor.mitee.mtdservice
+
+on init && property:ro.boot.serialno=*
+    setprop ro.vendor.oem.serialno ${ro.boot.serialno}

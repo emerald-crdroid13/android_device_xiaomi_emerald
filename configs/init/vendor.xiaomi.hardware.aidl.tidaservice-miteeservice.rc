@@ -1,0 +1,12 @@
+# Stock OS3.0.307.0 /vendor/etc/init/vendor.xiaomi.hardware.aidl.tidaservice-miteeservice.rc: the 'start vendor.mitee.tidaservice' line is commented out, the
+# service stays off - nothing on the crDroid line needs it (device/xiaomi/emerald
+# patch-images.py). Everything else is the stock file, byte for byte.
+service vendor.mitee.tidaservice /vendor/bin/tidad_mitee
+    interface aidl vendor.xiaomi.hardware.aidl.tidaservice.ITidaService/default
+    class hal
+    user system
+    group system
+    disabled
+
+on property:sys.boot_completed=1
+#     start vendor.mitee.tidaservice

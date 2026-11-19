@@ -262,6 +262,37 @@ PATCHES = {
         ("file", "/etc/fstab.mt6789",
          "device/xiaomi/emerald/rootdir/etc/fstab.mt6789",
          "d03505648738dc06bf936c065ff7d731696ba819e02881d939de850050232300"),
+        # Services that nothing on this line uses are not started. Each one is either a MIUI
+        # service (no Xiaomi apps here, Play Integrity goes through keymint) or a test/diagnostic
+        # tool; measured on C1.7 (2026-11-19): all of them idle at 0.0-0.1 % CPU, the whole set is
+        # about 30 MB RSS, and frs is the only one that wakes up on its own - every 5 s for a
+        # thermal node this kernel does not have. All eight files are the stock ones with only the
+        # start line or the whole service block commented out (the rc files are small and stored
+        # uncompressed, so the append operation cannot be used).
+        ("file", "/etc/init/miteelog.rc",
+         "device/xiaomi/emerald/configs/init/miteelog.rc",
+         "b6fe11f364baefca7d53fb46388ec902a033b4321cb804a5eff11dd8f3a738cc"),
+        ("file", "/etc/init/init.frs.rc",
+         "device/xiaomi/emerald/configs/init/init.frs.rc",
+         "971e63a2ae9898e602ddc7c4540ce548d691f9bbff7c78ac72cf26a11b7c5036"),
+        ("file", "/etc/init/vendor.xiaomi.hardware.aidl.mtdservice-miteeservice.rc",
+         "device/xiaomi/emerald/configs/init/vendor.xiaomi.hardware.aidl.mtdservice-miteeservice.rc",
+         "236712783facf5ba9d143d640dcccffc07dae78180d6230014d48206f38edf70"),
+        ("file", "/etc/init/vendor.xiaomi.hardware.aidl.tidaservice-miteeservice.rc",
+         "device/xiaomi/emerald/configs/init/vendor.xiaomi.hardware.aidl.tidaservice-miteeservice.rc",
+         "acb16bd13ed986dbb3e86c0473fdce21d6a10ee1359038da5cb61ff3dbc4751e"),
+        ("file", "/etc/init/mrm_mitee.rc",
+         "device/xiaomi/emerald/configs/init/mrm_mitee.rc",
+         "ddb9eafb677ee8818210cf300f62a18e8efcb5d5d25a9deb7b1d48e4d6ea66df"),
+        ("file", "/etc/init/init.vtservice_aidl.rc",
+         "device/xiaomi/emerald/configs/init/init.vtservice_aidl.rc",
+         "6186e39fc0fe2998ba7180c20abb2254543502de8487a18c39734f296333b556"),
+        ("file", "/etc/init/init.wfca.rc",
+         "device/xiaomi/emerald/configs/init/init.wfca.rc",
+         "1bf1bc3d50d46551252f06073067da112e47b103eb312985dc760490983be6be"),
+        ("file", "/etc/init/vendor.xiaomi.hw.touchfeature-service.rc",
+         "device/xiaomi/emerald/configs/init/vendor.xiaomi.hw.touchfeature-service.rc",
+         "30d0c213d7879800ae0f53a7277174272ef061a13606f0af2dd2a83169a5f186"),
     ]),
     "vendor_dlkm.img": ("vendor_dlkm.patched.img", [
         # LVTS (CPU, GPU and SoC thermal sensors) loses power in s2idle and the stock
@@ -483,8 +514,11 @@ def replace_file(image, path, content):
         i_format = struct.unpack_from("<H", inode, 0)[0]
         if i_format & 1:
             die(f"{path}: extended inode, only compact ones are handled")
-        if (i_format >> 1) & 7 not in (1, 3):
-            die(f"{path}: not a compressed file")
+        # 0 flat plain, 1 compressed full, 2 flat inline (small files, data right after the
+        # inode), 3 compressed compact. All of them can just be pointed at new blocks; for the
+        # inline layouts the old tail is left in place, unused.
+        if (i_format >> 1) & 7 not in (0, 1, 2, 3):
+            die(f"{path}: unexpected inode layout {(i_format >> 1) & 7}")
 
         start = blocks
         f.seek(start * BLOCK)

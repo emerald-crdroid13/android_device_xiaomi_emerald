@@ -1,0 +1,7 @@
+# Stock OS3.0.307.0 /vendor/etc/init/mrm_mitee.rc, with "service vendor.mrmd" commented out:
+# the service is never needed on the crDroid line and stays off, so the block cannot be
+# started by anything. Everything else is the stock file, byte for byte.
+# service vendor.mrmd /vendor/bin/mrmd_mitee
+#     class hal
+#     user system
+#     group system shell

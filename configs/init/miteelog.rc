@@ -1,0 +1,18 @@
+# Stock OS3.0.307.0 /vendor/etc/init/miteelog.rc: the 'start miteelog' line is commented out, the
+# service stays off - nothing on the crDroid line needs it (device/xiaomi/emerald
+# patch-images.py). Everything else is the stock file, byte for byte.
+service miteelog /vendor/bin/miteelog
+    class core
+    user system
+    group system
+    disabled
+
+on post-fs-data
+    mkdir /data/vendor/mitee
+    chmod 0755 /data/vendor/mitee
+    chown system system /data/vendor/mitee
+    mkdir /data/vendor/thh
+    chmod 0755 /data/vendor/thh
+    chown system system /data/vendor/thh
+    write /proc/bootprof "init miteelog"
+#     start miteelog
