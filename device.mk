@@ -339,6 +339,19 @@ PRODUCT_PRODUCT_PROPERTIES += \
     log.tag.libsensor-frameBufferManager=F \
     log.tag.MiBrightness=F
 
+# Memory: lmkd settings from the Pixel 6 memory configuration (hardware/google/pixel/mm, the GKI
+# memory package): keep at least 150 MB of file cache, wait half as long before killing another
+# process, and treat a 40 % full stall as critical. lmkd reads all three at start (A17 lmkd defaults
+# are 0 / 100 / 100). The stock MTK vendor values are 0 / 100 / 100 as well. Measured on C1.7
+# (2026-11-19): 0 kills in dumpsys activity lmk, 4 am_kill events in the buffer and three of them
+# Chrome's isolated sandboxes ("isolated not needed"), so there is no pressure to fight. The rest of
+# the Pixel set is either already in place (MGLRU enabled: lru_gen/enabled 0x0003, THP never) or
+# needs the vendor image (zram size is 55 % from /vendor/fstab.enableswap).
+PRODUCT_PRODUCT_PROPERTIES += \
+    ro.lmk.filecache_min_kb=153600 \
+    ro.lmk.kill_timeout_ms=50 \
+    ro.lmk.stall_limit_critical=40
+
 # Updates over the air: crDroid's Updater reads the JSON URL from the updater_server_url string
 # resource only (the lineage.updater.uri property of the LineageOS app is not read any more), so the
 # URL is set by overlays/UpdaterResOverlayEmerald, not here. The stock value points at
