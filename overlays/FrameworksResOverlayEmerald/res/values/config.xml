@@ -20,7 +20,9 @@
          so there was no doze and no notification pulse (2026-10-18). -->
     <string translatable="false" name="config_dozeComponent">com.android.systemui/com.android.systemui.doze.DozeService</string>
     <!-- AOSP default 0.0 = backlight 1/2047, a black pulse; the stock displayconfig has no doze brightness either.
-         SystemUI clamps it to the current user/auto brightness. Tested on 2.1 by bind mount: visible, not too dim. -->
+         SystemUI clamps it to the current user/auto brightness. Tested on 2.1 by bind mount: visible, not too dim.
+         0.06 is the HyperOS value; on the panel DBV scale it is level 246 (~60 nits), it was level 123 (~30 nits)
+         while the lights scale was still 1..2047, so the pulse got brighter with the scale fix of C1.8. -->
     <item name="config_screenBrightnessDozeFloat" format="float" type="dimen">0.06</item>
     <!-- With auto-brightness on, the notification pulse uses the current auto-brightness instead of the fixed doze
          value above (that one stays for manual brightness). The light sensor runs only while the pulse is on, not with
@@ -34,11 +36,14 @@
          start, before a /data overlay applies. -->
     <integer name="config_autoBrightnessBrighteningLightDebounce">1000</integer>
     <integer name="config_autoBrightnessDarkeningLightDebounce">1000</integer>
-    <!-- Brightness range for configs/displayconfig/display_port_0.xml (lights HAL scale). A17 DisplayDeviceConfig
-         rejects the map (system_server crash) unless the setting minimum is >= its first backlight point; the stock
-         MTK vendor overlay sets 0.0. Minimum and dim = 1/254 = backlight level 9 (level 1 was black at the slider
-         minimum, tester 2026-10-15); default 0.15 = ~75 nits as stock (307 of 4095). Tested on clean-2.1 by bind
-         mount (2026-10-18): slider minimum level 9 also with auto-brightness, maximum 2047. -->
+    <!-- Brightness range for configs/displayconfig/display_port_0.xml (lights HAL scale, the panel DBV 0..4095).
+         A17 DisplayDeviceConfig rejects the map (system_server crash) unless the setting minimum is >= its first
+         backlight point; the stock MTK vendor overlay sets 0.0. Minimum and dim = 1/254 = level 17, just above the
+         vendor's MinDBV 16 (~4 nits); it cannot go lower either, the value must survive the 0..255 int round trip
+         (level 1 was black at the slider minimum, tester 2026-10-15; 1/254 also matched level 9 while the lights
+         scale was still 1..2047). Default 0.15 = level 615 (~150 nits) as HyperOS. The setting maximum stays 1.0
+         (1000 nits), but the framework caps brightness at the HBM transition point 0.4997 = 500 nits unless high
+         brightness mode is allowed, so the slider's top is still the factory maximum. -->
     <item name="config_screenBrightnessSettingMinimumFloat" format="float" type="dimen">0.003937008</item>
     <item name="config_screenBrightnessSettingMaximumFloat" format="float" type="dimen">1.0</item>
     <item name="config_screenBrightnessSettingDefaultFloat" format="float" type="dimen">0.15</item>
@@ -47,7 +52,9 @@
          levels (product AospFrameworkResOverlay: 100 lux ~90 nits, 500 lux ~120, 2000 lux ~280, HBM above ~6000 lux)
          re-sampled with a monotone interpolation in log(lux), largest step 1.85x between neighbouring points.
          Without it the MTK vendor overlay's 0..255 curve applies: about twice as bright as stock at 200-500 lux
-         (~200 nits) and dimmer at 10-50 lux. Points above 500 nits clamp to the displayconfig maximum. The
+         (~200 nits) and dimmer at 10-50 lux. Values above 500 nits need the HBM half of the displayconfig map
+         (since C1.8 the map goes to 1000 nits and unlocks from 6001 lux; before that everything above 500 nits was
+         clamped to the 500 nit maximum). The
          displayconfig has no doze mapping, so the notification pulse uses this curve too. The vendor's 18 values
          no longer fit these lux levels: if this curve were invalid, auto-brightness would be off, not the vendor
          curve. Not testable by hand: the config is read once at framework start and stop;start freezes the ALS. -->
