@@ -287,9 +287,10 @@ PATCHES = {
         ("file", "/etc/init/init.vtservice_aidl.rc",
          "device/xiaomi/emerald/configs/init/init.vtservice_aidl.rc",
          "6186e39fc0fe2998ba7180c20abb2254543502de8487a18c39734f296333b556"),
-        ("file", "/etc/init/init.wfca.rc",
-         "device/xiaomi/emerald/configs/init/init.wfca.rc",
-         "1bf1bc3d50d46551252f06073067da112e47b103eb312985dc760490983be6be"),
+        # wfca is NOT stubbed: it is MTK's Wi-Fi Calling agent (the /dev/socket/wfca socket that
+        # volte_ua uses to open the RTP sockets marked for the ePDG IPsec tunnel), not a
+        # certification tool. Without it a Wi-Fi call connects, the ePDG tunnel comes up, the
+        # audio path opens, and the media is silent both ways (2026-11-20).
         ("file", "/etc/init/vendor.xiaomi.hw.touchfeature-service.rc",
          "device/xiaomi/emerald/configs/init/vendor.xiaomi.hw.touchfeature-service.rc",
          "30d0c213d7879800ae0f53a7277174272ef061a13606f0af2dd2a83169a5f186"),
