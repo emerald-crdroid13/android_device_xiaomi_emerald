@@ -207,19 +207,6 @@ PRODUCT_PRODUCT_PROPERTIES += \
 PRODUCT_PRODUCT_PROPERTIES += \
     debug.sf.frame_rate_category_mrr=1
 
-# Per-app frame rate override (test build C1.9). AOSP default is true (every call site passes
-# enable_frame_rate_override(true)), but the stock MTK vendor build.prop sets it to false, so on this
-# ROM an app could never ask for its own cadence: everything is paced at the panel mode (60 or 120).
-# With it enabled, Scheduler::isVsyncValid() delivers only the vsyncs in phase with the uid's rate
-# (FrameRateOverrideMappings: apps via Surface.setFrameRate, plus the content detector), so an app that
-# renders at ~60 fps gets evenly spaced frames instead of alternating 8.3/16.7 ms. The display mode is
-# not switched, so this cannot trigger the full modeset that 90 Hz did. Measured 2026-11-19 on C1.8:
-# VK p50 8 / p90 18 ms at 120 Hz, SystemUI p50 16 ms - exactly the apps that cannot sustain 120.
-# Product props are the last build.prop loaded, so this overrides the vendor value. Rollback: delete
-# these lines. Test knob only - keep or drop after the A/B on the phone.
-PRODUCT_PRODUCT_PROPERTIES += \
-    ro.surface_flinger.enable_frame_rate_override=true
-
 # SurfaceFlinger log churn: the stock MTK mapper (mapper.mediatek.so, loaded into the surfaceflinger
 # process) answers UNSUPPORTED to some buffer metadata query that SF makes on every composed frame and
 # logs it as an error. It logs with the *default* liblog tag, which is the process name in lower case
