@@ -28,6 +28,13 @@
          value above (that one stays for manual brightness). The light sensor runs only while the pulse is on, not with
          the screen off in doze. Tested on 2.2 by bind mount (2026-10-18). -->
     <bool name="config_allowAutoBrightnessWhileDozing">true</bool>
+    <!-- Always-on display: the panel takes the DOZE power state (the LineageOS line tested it by hand on
+         2026-10-20 with this flag plus SystemUI's doze_display_state_supported: the phone stayed in AOD),
+         and this is what makes the Settings switch "Always show time and info" appear. Kept at the AOSP
+         default for the switch itself (config_dozeAlwaysOnEnabled=true, so AOD is on after the first boot;
+         Settings > Display > Lock screen turns it off). Open points for this line: the AOD picture, the
+         doze brightness above (0.06 = ~60 nits, the pulse value) and the overnight idle drain. -->
+    <bool name="config_dozeAlwaysOnDisplayAvailable">true</bool>
     <!-- Auto-brightness light debounce as stock (HyperOS product AospFrameworkResOverlay: 1000/1000). It pairs with the
          stock light horizons in configs/displayconfig/display_port_0.xml (long 3000 ms): with the AOSP 4000/8000 the
          debounce outlasts the horizon and the ambient lux never changes while the screen is on, only at screen on
