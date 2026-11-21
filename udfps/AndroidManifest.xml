@@ -17,12 +17,6 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_ROUTING" />
 
-    <!-- SystemUI's doze pulse request (DozeTriggers), sent by ScreenOffPulse and KeyHandler. SystemUI registers
-         its receiver exported without a permission, so as a non-protected action every pulse sent from this
-         persistent app or system_server logged a "Sending non-protected broadcast" wtf; protected, only system
-         callers can send it. -->
-    <protected-broadcast android:name="com.android.systemui.doze.pulse" />
-
     <application
         android:name=".UdfpsApp"
         android:defaultToDeviceProtectedStorage="true"

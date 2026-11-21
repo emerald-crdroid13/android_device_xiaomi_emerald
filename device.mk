@@ -285,13 +285,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/keylayout/goodix_ts.kl:$(TARGET_COPY_OUT_PRODUCT)/usr/keylayout/goodix_ts.kl
 
-# Screen-off fingerprint unlock: EmeraldUdfps's key handler in PhoneWindowManager (lineage-sdk
-# config_deviceKeyHandler*). A build-time overlay, not an RRO: system_server reads lineage-sdk
-# resources from the zygote's system assets, which take no RRO for lineageos.platform (an adb-installed
-# RRO was ignored, 2026-10-18).
-PRODUCT_PACKAGE_OVERLAYS += \
-    $(LOCAL_PATH)/overlay-lineage
-
 # Bluetooth profiles. The Bluetooth module enables a profile only when its sysprop is true
 # (A2dpService.isEnabled() = isProfileA2dpSourceEnabled().orElse(false)); stock sets these in the
 # HyperOS system + product build.prop, which clean-2 doesn't ship, so only GATT (BLE: the watch),
