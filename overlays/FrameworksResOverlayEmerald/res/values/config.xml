@@ -19,21 +19,40 @@
          com.android.dreams.alwaysondisplay, a HyperOS app we don't ship: DreamValidator rejected it at every screen off,
          so there was no doze and no notification pulse (2026-10-18). -->
     <string translatable="false" name="config_dozeComponent">com.android.systemui/com.android.systemui.doze.DozeService</string>
-    <!-- AOSP default 0.0 = backlight 1/2047, a black pulse; the stock displayconfig has no doze brightness either.
-         SystemUI clamps it to the current user/auto brightness. Tested on 2.1 by bind mount: visible, not too dim.
-         0.06 is the HyperOS value; on the panel DBV scale it is level 246 (~60 nits), it was level 123 (~30 nits)
-         while the lights scale was still 1..2047, so the pulse got brighter with the scale fix of C1.8. -->
-    <item name="config_screenBrightnessDozeFloat" format="float" type="dimen">0.06</item>
-    <!-- With auto-brightness on, the notification pulse uses the current auto-brightness instead of the fixed doze
-         value above (that one stays for manual brightness). The light sensor runs only while the pulse is on, not with
-         the screen off in doze. Tested on 2.2 by bind mount (2026-10-18). -->
-    <bool name="config_allowAutoBrightnessWhileDozing">true</bool>
+    <!-- Doze/AOD and pulse brightness. AOSP default 0.0 = backlight 1/2047, a black pulse; the stock displayconfig has
+         no doze brightness either, so this value is the one the panel gets. 0.06 was the HyperOS value for the pulse
+         (DBV level 246, ~60 nits; it was level 123, ~30 nits, while the lights scale was still 1..2047, so the pulse
+         got brighter with the scale fix of C1.8). Since the always-on display it is the AOD brightness as well: SystemUI
+         DozeScreenBrightness hands it over as dozeScreenBrightness, clamped down to the current user/auto brightness
+         (seen live as 0.003937008 = the setting minimum in a dark room). 60 nits for a panel lit all night meant
+         burn-in and idle drain, so 0.025 = DBV level 102 (~25 nits) from C1.11. Not testable by hand: read once at
+         framework start, before a /data overlay applies. -->
+    <item name="config_screenBrightnessDozeFloat" format="float" type="dimen">0.025</item>
+    <!-- A17 reads this in DisplayBrightnessStrategySelector: with true (and auto-brightness on) the doze state uses
+         AutomaticBrightnessStrategy, so the ALS keeps driving the brightness the whole time the AOD is up — that is
+         how the AOD followed the room. false (AOSP default) selects DozeBrightnessStrategy, i.e. the fixed value
+         above, and the ALS no longer tracks anything in doze. It was true on 2.2 by bind mount (2026-10-18) for the
+         pulse; flipped back to false in C1.11, the AOD must not follow auto-brightness. The cost: the pulse is fixed
+         too instead of using the current auto-brightness. -->
+    <bool name="config_allowAutoBrightnessWhileDozing">false</bool>
+    <!-- Burn-in protection for the always-on display (AOSP default false). BurnInProtectionHelper in PhoneWindowManager
+         shifts the whole display by these offsets every 1-2 minutes while the panel is in DOZE, which is exactly the
+         AOD state here (doze_display_state_supported). The helper walks the offsets in steps of 2 px from 0, so the
+         bounds -2..2 produce the intended +-2 px in both axes; a radius limit is only for round panels (-1 = none).
+         Can be tried without a rebuild: setprop persist.debug.force_burn_in true and reboot (dev mode -8..8 / -8..-4),
+         read once in PhoneWindowManager's constructor. -->
+    <bool name="config_enableBurnInProtection">true</bool>
+    <integer name="config_burnInProtectionMinHorizontalOffset">-2</integer>
+    <integer name="config_burnInProtectionMaxHorizontalOffset">2</integer>
+    <integer name="config_burnInProtectionMinVerticalOffset">-2</integer>
+    <integer name="config_burnInProtectionMaxVerticalOffset">2</integer>
+    <integer name="config_burnInProtectionMaxRadius">-1</integer>
     <!-- Always-on display: the panel takes the DOZE power state (the LineageOS line tested it by hand on
          2026-10-20 with this flag plus SystemUI's doze_display_state_supported: the phone stayed in AOD),
          and this is what makes the Settings switch "Always show time and info" appear. Kept at the AOSP
          default for the switch itself (config_dozeAlwaysOnEnabled=true, so AOD is on after the first boot;
-         Settings > Display > Lock screen turns it off). Open points for this line: the AOD picture, the
-         doze brightness above (0.06 = ~60 nits, the pulse value) and the overnight idle drain. -->
+         Settings > Display > Lock screen turns it off). The doze brightness above (0.025 = ~25 nits) and the
+         burn-in protection right above are the AOD part of this line. -->
     <bool name="config_dozeAlwaysOnDisplayAvailable">true</bool>
     <!-- Auto-brightness light debounce as stock (HyperOS product AospFrameworkResOverlay: 1000/1000). It pairs with the
          stock light horizons in configs/displayconfig/display_port_0.xml (long 3000 ms): with the AOSP 4000/8000 the
