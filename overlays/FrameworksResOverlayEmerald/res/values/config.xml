@@ -47,6 +47,23 @@
     <integer name="config_burnInProtectionMinVerticalOffset">-2</integer>
     <integer name="config_burnInProtectionMaxVerticalOffset">2</integer>
     <integer name="config_burnInProtectionMaxRadius">-1</integer>
+    <!-- Lift with the always-on display off: the pulse shows only the fingerprint icon, as HyperOS does.
+         AOSP has this as the quick pickup: DozeSensors registers config_quickPickupSensorType and
+         DozeUi turns the trigger into DOZE_PULSING_WITHOUT_UI, the pulse without any doze UI — the panel
+         goes to DOZE, the screen is black and only the keyguard fingerprint icon (the non-auth UI) is
+         drawn. config_quickPickupSensorType is empty in AOSP, and the plain pickup path is hardcoded to
+         android.sensor.pick_up_gesture, which the stock sensor HAL does not provide: it exposes
+         "xiaomi pick up sensor" (33171036, special-trigger, wake up; live dumpsys sensorservice on C1.10).
+         Quick pickup is gated on ambientDisplayConfiguration.quickPickupSensorEnabled: the
+         doze_quick_pickup_gesture setting (default on), a non-empty sensor type, the "Lift to check phone"
+         setting (doze_pick_up_gesture, needs config_dozePulsePickup below) and, deliberately, always-on
+         display OFF — with the AOD up the icon and the clock are already there. The sensor has to be
+         enrolled as optical UDFPS (isOpticalUdfpsEnrolled) for the controller to be created at all.
+         Stock reference: MiuiGxzwSensor/MiuiGxzwIconView in the 307 MiuiSystemUI listen to a put-up/motion
+         sensor and show only the FOD icon while dozing (settings key gxzw_icon_aod_show_enable, default on,
+         independent of the AOD clock). -->
+    <bool name="config_dozePulsePickup">true</bool>
+    <string translatable="false" name="config_quickPickupSensorType">xiaomi pick up sensor</string>
     <!-- Always-on display: the panel takes the DOZE power state (the LineageOS line tested it by hand on
          2026-10-20 with this flag plus SystemUI's doze_display_state_supported: the phone stayed in AOD),
          and this is what makes the Settings switch "Always show time and info" appear. Kept at the AOSP
